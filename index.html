@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>谷阿莫團購表單</title>
+<style>
+  html,body{margin:0;padding:0;background:#fff;font:13px Arial,sans-serif}
+
+  .custom-select{ position:relative; display:inline-block; width:100%; }
+  .custom-select select{
+    -webkit-appearance:none; -moz-appearance:none; appearance:none;
+    width:100%;
+    padding:6px 32px 6px 8px;
+    font-size:14px;
+    border:1px solid #ccc; border-radius:4px;
+    background-color:#fff; cursor:pointer;
+    background-image:url('data:image/svg+xml;utf8,<svg fill="%23666" height="12" viewBox="0 0 16 16" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M4 6l4 4 4-4"/></svg>');
+    background-repeat:no-repeat; background-position:right 8px center; background-size:12px;
+    transition:border-color .2s, background-image .2s;
+  }
+  .custom-select select:focus{
+    border-color:#e67e22; outline:none;
+    background-image:url('data:image/svg+xml;utf8,<svg fill="%23e67e22" height="12" viewBox="0 0 16 16" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M4 6l4 4 4-4"/></svg>');
+  }
+
+  .order-container{border:1px solid #ccc;padding:20px;margin:20px auto;max-width:400px;box-sizing:border-box;background:#fafafa}
+  .order-container h2{font-size:14px;font-weight:bold;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+  .order-container h2 #stepIndicator{font-size:12px;color:#666}
+  form{max-width:360px;margin:0 auto;position:relative}
+  .step{display:none}
+  .step.active{display:block}
+  .form-group{margin-bottom:16px}
+  .form-label{display:block;margin-bottom:6px;font-size:14px}
+  .required{color:#e74c3c}
+  .error-msg{color:#e74c3c;font-size:13px;margin-left:4px}
+  .order-quantity label{display:flex;align-items:center;margin-bottom:12px;font-size:14px}
+  input[type="text"],input[type="email"],textarea{width:100%;box-sizing:border-box;font-size:14px;padding:4px 0;margin:0 0 16px;border:none;border-bottom:1px dashed #ccc;background:transparent;outline:none;line-height:1.4}
+  textarea{resize:none;height:calc(1.4em*3 + 8px);padding-top:4px}
+  ::placeholder{color:#999}
+  .btn{padding:6px 0;font-size:12px;color:#fff;border:none;border-radius:4px;cursor:pointer;margin:2px;min-width:92px;box-shadow:0 3px 0 rgba(0,0,0,.2);transition:transform .1s,filter .1s}
+  .btn:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.2)}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+  .btn-grey{background:#95a5a6}.btn-grey:hover{filter:brightness(0.95)}
+  .btn-orange{background:#e67e22}.btn-orange:hover{filter:brightness(0.95)}
+  .btn-red{background:#e74c3c}.btn-red:hover{filter:brightness(0.95)}
+  .step-nav{text-align:center;margin-top:20px}
+  .details-container{border:1px solid #ccc;padding:20px;margin:20px auto;max-width:400px;box-sizing:border-box;background:#fafafa;display:none}
+  .details-container h2{font-size:14px;font-weight:bold;margin-bottom:12px}
+  .details-container .details-text{line-height:1.4;white-space:pre-wrap;margin-bottom:20px;font-size:14px}
+  .details-buttons{display:flex;justify-content:center;gap:10px}
+  .amo-top-toast-wrap{position:fixed;top:0;left:0;right:0;z-index:99999;display:flex;justify-content:center;pointer-events:none}
+  .amo-top-toast{margin:12px auto;max-width:340px;background:#333;color:#fff;padding:10px 12px;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.25);display:flex;align-items:center;gap:12px;pointer-events:auto}
+</style>
+</head>
+<body>
+
+<div class="order-container" id="orderContainer">
+  <h2><strong>Start Your Order</strong> <span id="stepIndicator"></span></h2>
+
+  <form id="orderForm" novalidate>
+    <!-- Step 1 -->
+    <div class="step active">
+      <div class="form-group order-quantity">
+        <label class="form-label" for="order_quantity">
+          訂購數量 <span class="required">*</span><span class="error-msg"></span>
+        </label>
+        <div class="custom-select">
+          <select id="order_quantity" name="order_quantity" required>
+            <option value="">選擇您想購買的品項…</option>
+            <!-- 你可以選擇只寫文字（= 價格元），或加上 data-code / data-price 讓 SKU 穩定 -->
+
+
+              <option value="1組 【Yomix】 65w氮化鎵自帶線快充頭(白) + 四合一極速快充磁吸線(黑/灰 隨機) + 送收納包(黑/米 隨機) = 1099元">1組 【Yomix】 65w氮化鎵自帶線快充頭(白) + 四合一極速快充磁吸線(黑/灰 隨機) + 送收納包(黑/米 隨機) = 1099元</option>
+
+              <option value="2組 【Yomix】 65w氮化鎵自帶線快充頭(白) + 四合一極速快充磁吸線(黑/灰 隨機) + 送收納包(黑/米 隨機) = 2198元">2組 【Yomix】 65w氮化鎵自帶線快充頭(白) + 四合一極速快充磁吸線(黑/灰 隨機) + 送收納包(黑/米 隨機) = 2198元</option>            
+
+
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 其餘步驟（照你原本） -->
+    <div class="step">
+      <div class="form-group">
+        <div class="form-label">備註</div>
+        <textarea name="remarks" placeholder="請輸入備註…"></textarea>
+      </div>
+    </div>
+    <div class="step">
+      <div class="form-group"><div class="form-label">訂購人 EMAIL <span class="required">*</span><span class="error-msg"></span></div><input type="email" name="email" placeholder="請輸入 Email" required></div>
+      <div class="form-group"><div class="form-label">收件人 電話 <span class="required">*</span><span class="error-msg"></span></div><input type="text" name="recipient_phone" placeholder="僅可輸入數字" required pattern="^[0-9]+$"></div>
+    </div>
+    <div class="step">
+      <div class="form-group"><div class="form-label">匯款帳號後五碼 <span class="required">*</span><span class="error-msg"></span></div><input type="text" name="bank_last5" maxlength="8" placeholder="請輸入後五碼" required></div>
+      <div class="form-group"><p><strong>收款帳戶資料</strong><br>銀行：台灣中小企業銀行 (050) 八德分行<br>戶名：必采生活股份有限公司<br>帳戶：33012235998</p></div>
+    </div>
+    <div class="step">
+      <div class="form-group"><div class="form-label">收件人 姓名 <span class="required">*</span><span class="error-msg"></span></div><input type="text" name="recipient_name" placeholder="請輸入收件人姓名" required></div>
+      <div class="form-group"><div class="form-label">收件人 地址 <span class="required">*</span><span class="error-msg"></span></div><input type="text" name="recipient_address" placeholder="請輸入地址" required></div>
+    </div>
+    <div class="step">
+      <div class="form-group"><div class="form-label">發票統編</div><input type="text" name="invoice_tax_id" placeholder="如無則免填"></div>
+      <div class="form-group"><div class="form-label">統編抬頭</div><input type="text" name="invoice_title" placeholder="如無則免填"></div>
+    </div>
+
+    <div class="step-nav">
+      <button type="button" id="prevBtn" class="btn btn-grey">上一步</button>
+      <button type="button" id="addToCartBtn" class="btn btn-red">加入購物車</button>
+      <button type="button" id="nextBtn" class="btn btn-orange">下一步</button>
+      <button type="submit" id="submitBtn" class="btn btn-orange" style="display:none">提交訂單</button>
+    </div>
+  </form>
+</div>
+
+<div class="details-container" id="detailsContainer">
+
+  <div class="details-text" id="detailsText"></div>
+  <div class="details-buttons">
+    <button type="button" id="editBtn" class="btn btn-orange">修改</button>
+    <button type="button" id="confirmBtn" class="btn btn-red">確認提交</button>
+  </div>
+</div>
+
+<script>
+/* ===== 基本設定 ===== */
+const execURL  = 'https://script.google.com/macros/s/AKfycbwDa6rj14kXt6Zpc865UlS04Ds8Rc6ACKEPAcl01ISB8IDwQVGnmDmNOCS_BQm5PRib/exec';
+const SOURCE_ID = '1l_ud7Fg1yzNCeoAX-SFQZ-u6pnmy4ugVSepRckzbPnI';
+
+const FOXY_CART_HOST = 'https://cart.amogoodbuy.com/cart';
+
+/* ===== 行為設定 ===== */
+const CLICK_COOLDOWN_MS = 2500;
+const QUICK_TOAST_MS    = 2500;
+
+/* ===== UI 工具 ===== */
+
+function quickToast(msg){
+  const id='amoQuickToast';
+  let t=document.getElementById(id);
+  if(!t){
+    t=document.createElement('div');
+    t.id=id;
+    t.style.cssText='position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#333;color:#fff;padding:10px 14px;border-radius:8px;font:14px/1.4 Arial;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:99999;opacity:0;transition:opacity .2s';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg||'已加入購物車';
+  requestAnimationFrame(()=>{ t.style.opacity='1'; setTimeout(()=>t.style.opacity='0', QUICK_TOAST_MS); });
+}
+
+
+// === Toast timers: 防止 quickToast 舊 timer 把 quickToastSeq 倒數中途關掉 ===
+let __amoToastHideTimer = null;
+let __amoToastSeqTimer  = null;
+let __amoToastToken = 0;
+
+function __amoToastCancelAllTimers(){
+  __amoToastToken++;
+  try{ if(__amoToastHideTimer) clearTimeout(__amoToastHideTimer); }catch(_){}
+  try{ if(__amoToastSeqTimer)  clearTimeout(__amoToastSeqTimer); }catch(_){}
+  __amoToastHideTimer = null;
+  __amoToastSeqTimer  = null;
+}
+
+function __amoEnsureToastEl(){
+  const id='amoQuickToast';
+  let t=document.getElementById(id);
+  if(!t){
+    t=document.createElement('div');
+    t.id=id;
+    t.style.cssText='position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#333;color:#fff;padding:10px 14px;border-radius:8px;font:14px/1.4 Arial;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:99999;opacity:0;transition:opacity .2s';
+    document.body.appendChild(t);
+  }
+  return t;
+}
+
+function quickToast(msg){
+  const t = __amoEnsureToastEl();
+  __amoToastCancelAllTimers(); // 先清掉舊的 hide/seq timer
+  t.textContent = msg || '已加入購物車';
+
+  requestAnimationFrame(()=>{
+    t.style.opacity='1';
+    __amoToastHideTimer = setTimeout(()=>{
+      t.style.opacity='0';
+      __amoToastHideTimer = null;
+    }, QUICK_TOAST_MS);
+  });
+}
+
+// ===== 序列版 Toast：依序顯示多段訊息，不影響既有 quickToast =====
+function quickToastSeq(list, interval = 600) {
+  const t = __amoEnsureToastEl();
+  __amoToastCancelAllTimers(); // 清掉 quickToast 的舊 timer，避免倒數被砍
+  const token = __amoToastToken;
+
+  let i = 0;
+  t.style.opacity = '1';
+
+  function step() {
+    if (token !== __amoToastToken) return; // 已被新的 toast 接管，直接停
+    if (i < list.length) {
+      t.textContent = list[i++];
+      __amoToastSeqTimer = setTimeout(step, interval);
+    } else {
+      __amoToastSeqTimer = null;
+      __amoToastHideTimer = setTimeout(()=>{ t.style.opacity='0'; __amoToastHideTimer=null; }, 200);
+    }
+  }
+  step();
+}
+
+
+
+
+
+
+
+function lock(btns){ (btns||[]).forEach(b=>{if(!b)return; b.disabled=true;}); }
+function unlock(btns){ (btns||[]).forEach(b=>{if(!b)return; b.disabled=false;}); }
+
+/* ===== 表單流程 ===== */
+let steps, prevBtn, nextBtn, addBtn, submitBtn, form, stepIndicator, currentStep=0, orderContainer, detailsContainer, detailsText, editBtn, confirmBtn;
+let __ORIGINAL_HTML = null;
+
+/* ===== 解析選項 → Foxy 參數（優先吃 data-*；沒給才用文字） ===== */
+function makeCodeFromName(name){
+  const base = (name||'').normalize('NFKD').replace(/[^\x00-\x7F]/g,'');
+  const slug = base.replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-+|-+$/g,'').toUpperCase();
+  if(slug) return slug;
+  let sum=0; for(let i=0;i<name.length;i++){ sum=(sum*31+name.charCodeAt(i))>>>0; }
+  return 'AUTO-' + (sum%1000000).toString(36).toUpperCase();
+}
+function parseSelectedItem(){
+  const sel = document.getElementById('order_quantity');
+  const opt = sel.options[sel.selectedIndex];
+  const display = (opt?.textContent||'').trim();
+  const nameFromText = display.split('=')[0].trim() || display;
+
+  const price = (opt?.dataset?.price) ? String(opt.dataset.price)
+              : ((display.match(/=\s*([\d,\.]+)\s*元?/)) ? RegExp.$1.replace(/[,]/g,'') : '');
+
+  const code  = (opt?.dataset?.code) ? String(opt.dataset.code)
+              : makeCodeFromName(nameFromText);
+
+  return { name: nameFromText, price, code, quantity: 1, display };
+}
+function buildCartUrl(item){
+  const qs = new URLSearchParams();
+  qs.set('name', item.name);
+  qs.set('price', item.price);
+  qs.set('quantity', String(item.quantity||1));
+  // === 關鍵：無論選哪個品項，密碼(code)一律為 SOURCE_ID 的前 5 碼 ===
+  qs.set('code', SOURCE_ID.slice(0,6));
+  qs.set('_', Date.now());
+  return `${FOXY_CART_HOST}?${qs.toString()}`;
+}
+
+/* ==== 參數與防快取工具（新增） ==== */
+function withParam(u,k,v){
+  try{ const x=new URL(u, location.href); x.searchParams.set(k, v); return x.toString(); }
+  catch(_){ return u + (u.includes('?')?'&':'?') + encodeURIComponent(k) + '=' + encodeURIComponent(v); }
+}
+function withCacheBust(u){
+  return withParam(u, '_', Date.now().toString()+Math.random().toString(36).slice(2));
+}
+
+/* === 全場景通用：隱藏 iframe「靜默加車」工具 === */
+let _silentFrame=null;
+function ensureSilentFrame(){
+  if (_silentFrame && document.body.contains(_silentFrame)) return _silentFrame;
+  const fr=document.createElement('iframe');
+  fr.name='amoCartSilent';
+  fr.style.cssText='width:1px;height:1px;border:0;position:absolute;left:-9999px;top:-9999px;';
+  document.body.appendChild(fr);
+  _silentFrame=fr;
+  return fr;
+}
+function silentLoad(u){
+  try{
+    const fr=ensureSilentFrame();
+    fr.src=u; // 直接設定 src 觸發真實 HTTP 請求（不需彈窗、不需外跳）
+  }catch(_){}
+}
+
+/* ==== 「當天第一次」雙保險（新增） ==== */
+const BOOT_KEY = 'AMO_CART_BOOTSTRAP_DATE';
+function todayStr(){ try{ const d=new Date(); d.setHours(0,0,0,0); return d.toISOString().slice(0,10);}catch(_){ return String(Date.now()).slice(0,10); } }
+function shouldDoubleShot(){ try{ return localStorage.getItem(BOOT_KEY)!==todayStr(); }catch(_){ return true; } }
+function markBootstrapped(){ try{ localStorage.setItem(BOOT_KEY, todayStr()); }catch(_){ } }
+
+/* === 全場景一律靜默：暖機 → 加車 → （首次）再加一次保險槍 === */
+let popupBusy=false; // 沿用節流旗標（不彈窗，但避免連續點擊過多請求）
+function flashAddToCart(url){
+  if (popupBusy) return;
+  popupBusy = true; setTimeout(()=>popupBusy=false, CLICK_COOLDOWN_MS);
+
+  const WARMUP_MS   = 350;  // 暖機等待
+  const RETRY_DELAY = 450;  // 第二槍間隔
+
+  // 1) 暖機（打開 cart 視圖建立/刷新 session；強制 cache-bust）
+  const warmupUrl = withCacheBust(`${FOXY_CART_HOST}?cart=view`);
+
+  // 2) 第一次加車（沿用原本的 url；你 buildCartUrl 已含 "_"）
+  const addUrl1 = url;
+
+  // 3) 第二次加車（僅「當天第一次」；再附一個新的 cache-bust 避免被合併）
+  const needDouble = shouldDoubleShot();
+  const addUrl2 = needDouble ? withCacheBust(url) : null;
+
+  // 依序在隱藏 iframe 載入
+  silentLoad(warmupUrl);
+  setTimeout(()=> silentLoad(addUrl1), WARMUP_MS);
+
+
+}
+
+/* ===== 加入購物車（解析→靜默加車→記錄→提示） ===== */
+async function addToCart(){
+  if(!validateStep()) return;
+  lock([addBtn,nextBtn]);
+
+  try{
+    const item = parseSelectedItem();
+    if(!item.name){ quickToast('請先選擇品項'); setTimeout(()=>unlock([addBtn,nextBtn]), CLICK_COOLDOWN_MS); return; }
+
+    if(!item.price){
+      quickToast('此品項缺價格，請在選項加上「= 價格元」或使用 data-price');
+      setTimeout(()=>unlock([addBtn,nextBtn]), CLICK_COOLDOWN_MS);
+      return;
+    }
+
+    const cartUrl = buildCartUrl(item);
+
+    // 全程靜默（暖機→加車→首次再加一槍）
+    flashAddToCart(cartUrl);
+
+    try{
+      const payload = { action:'cartlog', product:item.display, name:item.name, code:item.code, price:item.price, sourceId:SOURCE_ID };
+      navigator.sendBeacon?.(execURL, new Blob([JSON.stringify(payload)], {type:'text/plain'}));
+    }catch(_){}
+
+    quickToastSeq(['加入購物車中..2', '加入購物車中..1', '加入購物車完成'], 700);
+
+  }catch(err){
+    quickToast('加入購物車失敗：' + (err?.message||err));
+  }
+
+  setTimeout(()=>unlock([addBtn,nextBtn]), CLICK_COOLDOWN_MS);
+}
+
+/* ===== 原本流程（未動） ===== */
+function showStep(n){
+  for(let i=0;i<steps.length;i++) steps[i].classList.remove('active');
+  steps[n].classList.add('active');
+  addBtn.style.display = (n===0 ? 'inline-block':'none');
+  if(n===steps.length-1){ nextBtn.style.display='none'; submitBtn.style.display='inline-block'; }
+  else { nextBtn.style.display='inline-block'; submitBtn.style.display='none'; }
+  prevBtn.style.display = (n===0 ? 'none':'inline-block');
+  nextBtn.textContent = (n===0 ? '直接購買' : '下一步');
+  stepIndicator.textContent = (n+1) + '/' + steps.length;
+
+
+// ===== [PATCH] Step 1 時，移除按鈕的鍵盤焦點序列，降低 Android/系統「下一步」導覽跳到按鈕導致誤觸 =====
+const ti = (n===0 ? -1 : 0);
+if (prevBtn) prevBtn.tabIndex = ti;
+if (nextBtn) nextBtn.tabIndex = ti;
+if (addBtn)  addBtn.tabIndex  = ti;
+if (submitBtn) submitBtn.tabIndex = ti;
+
+
+}
+
+function clearErrors(n){ steps[n].querySelectorAll('.error-msg').forEach(e=>e.textContent=''); }
+function validateStep(){
+  if(currentStep===0){
+    const selected = (document.getElementById('order_quantity')?.value||'').trim();
+    if(!selected){ const err=document.querySelector('.order-quantity .error-msg'); if(err) err.textContent='此為必填欄位'; return false; }
+    return true;
+  }
+  const inputs = steps[currentStep].querySelectorAll('input');
+  for(let i=0;i<inputs.length;i++){
+    const inp=inputs[i], val=inp.value.trim(), pat=inp.getAttribute('pattern');
+    if(inp.hasAttribute('required') && !val){ inp.parentElement.querySelector('.error-msg').textContent='此為必填欄位'; return false; }
+    if(pat && val && !(new RegExp(pat)).test(val)){ inp.parentElement.querySelector('.error-msg').textContent='格式錯誤'; return false; }
+  }
+  return true;
+}
+
+function init(){
+  if(!__ORIGINAL_HTML) __ORIGINAL_HTML = document.body.innerHTML;
+
+  steps = document.getElementsByClassName('step');
+  form  = document.getElementById('orderForm');
+  prevBtn = document.getElementById('prevBtn');
+  nextBtn = document.getElementById('nextBtn');
+  addBtn  = document.getElementById('addToCartBtn');
+  submitBtn = document.getElementById('submitBtn');
+  stepIndicator = document.getElementById('stepIndicator');
+  orderContainer = document.getElementById('orderContainer');
+  detailsContainer = document.getElementById('detailsContainer');
+  detailsText = document.getElementById('detailsText');
+  editBtn = document.getElementById('editBtn');
+  confirmBtn = document.getElementById('confirmBtn');
+
+
+// ===== [PATCH] 選完品項就立刻 blur + 提示 + 捲到按鈕區，減少客人去按系統「下一步」導覽列 =====
+const qtySel = document.getElementById('order_quantity');
+if (qtySel) {
+
+qtySel.addEventListener('focus', () => {
+  __amoToastCancelAllTimers();
+  const t = document.getElementById('amoQuickToast');
+  if (t) t.style.opacity = '0';
+});
+
+
+
+  qtySel.addEventListener('change', () => {
+    // 1) 立刻失焦（很多手機會因此關掉原生下拉/回到原畫面）
+    setTimeout(() => { try { qtySel.blur(); } catch(_) {} }, 0);
+
+    // 2) 給客人明確下一步行為
+    quickToast('已選擇品項，請按「加入購物車」或「直接購買」');
+
+    // 3) 把按鈕區拉到視野內（避免客人找不到）
+    setTimeout(() => {
+      try {
+        document.getElementById('addToCartBtn')?.scrollIntoView({behavior:'smooth', block:'center'});
+      } catch(_) {}
+    }, 80);
+  });
+}
+
+
+
+
+  prevBtn.onclick = ()=>{ if(currentStep===0) return; currentStep=Math.max(0,currentStep-1); clearErrors(currentStep); showStep(currentStep); };
+
+nextBtn.onclick = ()=>{ 
+  if(!validateStep()) return;
+
+  // 只在 Step0 時，把「已選擇品項...」那個提示關掉（不影響其他倒數/提示）
+ if (currentStep === 0) {
+  const t = document.getElementById('amoQuickToast');
+  if (t && (t.textContent || '').includes('已選擇品項')) {
+    __amoToastCancelAllTimers();
+    t.style.opacity = '0';
+  }
+}
+
+
+  currentStep = Math.min(steps.length - 1, currentStep + 1);
+  clearErrors(currentStep);
+  showStep(currentStep);
+};
+
+
+  addBtn.onclick  = addToCart;
+
+  form.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && e.target.tagName.toLowerCase()!=='textarea'){ e.preventDefault(); } });
+
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    if(!validateStep()) return;
+    const f = form;
+    const summary = [
+      '訂購數量：' + (f.order_quantity?.value||''),
+      '匯款後五碼：' + (f.bank_last5?.value||''),
+      'Email：' + (f.email?.value||''),
+      '姓名：' + (f.recipient_name?.value||''),
+      '電話：' + (f.recipient_phone?.value||''),
+      '地址：' + (f.recipient_address?.value||''),
+      '公司統編：' + ((f.invoice_tax_id?.value||'').trim()||'無'),
+      '公司抬頭：' + ((f.invoice_title?.value||'').trim()||'無')
+    ];
+    orderContainer.style.display='none';
+    detailsContainer.style.display='block';
+    detailsText.textContent = summary.join('\n');
+  });
+
+  editBtn.onclick = ()=>{
+    detailsContainer.style.display='none';
+    orderContainer.style.display='block';
+    currentStep = steps.length - 1;
+    clearErrors(currentStep);
+    showStep(currentStep);
+  };
+
+  confirmBtn.onclick = ()=>{
+    const f=form;
+    const html = `
+      <div style="display:flex;justify-content:center;align-items:flex-start;padding-top:20px;background:#fff;">
+        <div style="max-width:360px;padding:20px;border:1px solid #ccc;border-radius:6px;background:#fafafa;font-size:14px;line-height:1.6;color:#333;">
+          <pre style="white-space:pre-wrap;">
+*匯款後24小時內沒收到「確認通知信」
+ 請協助檢查垃圾郵件，或是聯絡我們
+ 聯絡信箱：amogood@amogoodbuy.com
+
+*訂購數量：${f.order_quantity?.value||''}
+
+*我們的收款帳號：
+ 銀行：台灣中小企業銀行(050)八德分行
+ 戶名：必采生活股份有限公司
+ 帳戶：33012235998
+          </pre>
+          <div style="text-align:center;">
+            <button id="againBtn" class="btn btn-orange">再買一單</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.innerHTML = html;
+
+    document.getElementById('againBtn').onclick = ()=>{
+      document.body.innerHTML = __ORIGINAL_HTML;
+      currentStep = 0;
+      setTimeout(init, 0);
+    };
+
+    const payload = {
+      orderQuantity: f.order_quantity?.value, remarks: f.remarks?.value, email: f.email?.value,
+      bankLast5: f.bank_last5?.value, recipientName: f.recipient_name?.value, recipientPhone: f.recipient_phone?.value,
+      recipientAddress: f.recipient_address?.value, invoiceTaxId: f.invoice_tax_id?.value, invoiceTitle: f.invoice_title?.value
+    };
+    fetch(execURL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body: JSON.stringify(payload) }).catch(()=>{});
+  };
+	
+  showStep(currentStep);
+}
+
+init();
+</script>
+</body>
+</html>
